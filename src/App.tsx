@@ -131,7 +131,7 @@ function App() {
   }
 
   const broadcastHeartbeat = () => {
-    Object.values(connectionsRef.current).forEach(conn => {
+    Object.values(connectionsRef.current as any).forEach((conn: any) => {
       if (conn.open) {
         conn.send({ type: 'heartbeat', name: name })
       }
