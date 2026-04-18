@@ -5,6 +5,7 @@ import './App.css'
 const PEER_PREFIX = 'p2p-pwa-'
 
 function App() {
+  const [mode, setMode] = useState('create')
   const [name, setName] = useState('')
   const [roomCode, setRoomCode] = useState('')
   const [hostPeerId, setHostPeerId] = useState('')
@@ -174,6 +175,7 @@ function App() {
     setHostPeerId('')
     setName('')
     setRoomCode('')
+    setMode('create')
   }
 
   if (isConnected) {
@@ -209,6 +211,22 @@ function App() {
   return (
     <div className="app">
       <h1>P2P PWA</h1>
+      
+      <div className="mode-tabs">
+        <button 
+          className={mode === 'create' ? 'active' : ''} 
+          onClick={() => setMode('create')}
+        >
+          Create Room
+        </button>
+        <button 
+          className={mode === 'join' ? 'active' : ''} 
+          onClick={() => setMode('join')}
+        >
+          Join Room
+        </button>
+      </div>
+
       <div className="form">
         <input
           type="text"
@@ -223,24 +241,31 @@ function App() {
           onChange={(e) => setRoomCode(e.target.value)}
           maxLength={4}
         />
-        <div className="buttons">
-          <button onClick={createRoom} className="primary" disabled={roomCode.length !== 4}>
+
+        {mode === 'create' ? (
+          <button 
+            onClick={createRoom} 
+            className="primary" 
+            disabled={roomCode.length !== 4}
+          >
             Create Room
           </button>
-          <button onClick={() => {}} disabled={roomCode.length !== 4}>
-            Join Room
-          </button>
-        </div>
-        {roomCode.length === 4 && (
-          <div className="join-form">
+        ) : (
+          <>
             <input
               type="text"
               placeholder="Host Peer ID (from host)"
               value={hostPeerId}
               onChange={(e) => setHostPeerId(e.target.value)}
             />
-            <button onClick={joinRoom}>Join Room</button>
-          </div>
+            <button 
+              onClick={joinRoom} 
+              className="primary"
+              disabled={roomCode.length !== 4 || !hostPeerId.trim()}
+            >
+              Join Room
+            </button>
+          </>
         )}
       </div>
     </div>
